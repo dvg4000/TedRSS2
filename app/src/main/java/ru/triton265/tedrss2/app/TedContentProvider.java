@@ -19,8 +19,8 @@ public class TedContentProvider extends ContentProvider {
     // prepare the UriMatcher
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-        URI_MATCHER.addURI(TedContentContract.AUTHORITY, "items", ITEM_LIST);
-        URI_MATCHER.addURI(TedContentContract.AUTHORITY, "items/#", ITEM_ID);
+        URI_MATCHER.addURI(TedContentContract.AUTHORITY, TedContentContract.FeedItem.ITEMS, ITEM_LIST);
+        URI_MATCHER.addURI(TedContentContract.AUTHORITY, TedContentContract.FeedItem.ITEMS + "/#", ITEM_ID);
     }
 
     private FeedReaderDbHelper mDbHelper;
