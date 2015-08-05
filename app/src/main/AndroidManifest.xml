@@ -16,6 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".TedContentProvider"
+            android:authorities="ru.triton265.tedrss.provider"
+            android:enabled="true"
+            android:syncable="true"
+            android:exported="false" >
+        </provider>
     </application>
 
 </manifest>
