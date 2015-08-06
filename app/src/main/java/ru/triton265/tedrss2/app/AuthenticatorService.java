@@ -9,6 +9,7 @@ public class AuthenticatorService extends Service {
 
     @Override
     public void onCreate() {
+        super.onCreate();
         mAuthenticator = new StubAuthenticator(this);
     }
 

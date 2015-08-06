@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sync-adapter xmlns:android="http://schemas.android.com/apk/res/android"
+              android:contentAuthority="ru.triton265.tedrss2.provider"
+              android:accountType="tedrss2.triton265.ru"
+              android:userVisible="false"
+              android:supportsUploading="false"
+              android:allowParallelSyncs="false"
+              android:isAlwaysSyncable="true" />
