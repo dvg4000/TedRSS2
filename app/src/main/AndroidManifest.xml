@@ -20,10 +20,17 @@
         <provider
             android:name=".TedContentProvider"
             android:authorities="ru.triton265.tedrss.provider"
-            android:enabled="true"
-            android:syncable="true"
-            android:exported="false" >
+            android:exported="false">
         </provider>
+
+        <service android:name=".AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
     </application>
 
 </manifest>
