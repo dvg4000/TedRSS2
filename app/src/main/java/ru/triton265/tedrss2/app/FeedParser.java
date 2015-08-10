@@ -7,8 +7,12 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class FeedParser {
     private static final String XML_NAMESPACE = null;
@@ -26,19 +30,22 @@ public class FeedParser {
     private static final String RSS_THUMBNAIL = "thumbnail";
     private static final String RSS_THUMBNAIL_URL = "url";
 
-    public List<FeedItem> parse(InputStream in) throws XmlPullParserException, IOException {
+    private static final SimpleDateFormat mFormatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz",
+            Locale.ENGLISH);
+
+
+    public List<FeedItem> parse(InputStream in) throws XmlPullParserException, IOException, ParseException {
         try {
             final XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            //parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
-            parser.nextTag();
-            return readFeed(parser);
+            return findItem(parser, RSS_CHANNEL) ? readFeed(parser) : Collections.EMPTY_LIST;
         } finally {
             in.close();
         }
     }
 
-    private List<FeedItem> readFeed(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private List<FeedItem> readFeed(XmlPullParser parser) throws IOException, XmlPullParserException, ParseException {
         final List<FeedItem> entries = new ArrayList<FeedItem>();
 
         parser.require(XmlPullParser.START_TAG, XML_NAMESPACE, RSS_CHANNEL);
@@ -53,17 +60,17 @@ public class FeedParser {
                 skip(parser);
             }
         }
-        return null;
+        return entries;
     }
 
-    private FeedItem readEntry(XmlPullParser parser) throws IOException, XmlPullParserException {
+    private FeedItem readEntry(XmlPullParser parser) throws IOException, XmlPullParserException, ParseException {
         String title = null;
         String description = null;
         String link = null;
         String category = null;
-        String pubdate = null;
         String video = null;
         String thumbnail = null;
+        Long pubdate = null;
 
         parser.require(XmlPullParser.START_TAG, XML_NAMESPACE, RSS_ITEM);
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -82,7 +89,7 @@ public class FeedParser {
                     link = readText(parser);
                     break;
                 case RSS_PUB_DATE:
-                    pubdate = readText(parser);
+                    pubdate = mFormatter.parse(readText(parser)).getTime();
                     break;
                 case RSS_CATEGORY:
                     category = readText(parser);
@@ -137,17 +144,26 @@ public class FeedParser {
         }
     }
 
+    private boolean findItem(@NonNull XmlPullParser parser, @NonNull String item) throws IOException, XmlPullParserException {
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals(item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static class FeedItem {
         public final String mTitle;
         public final String mDescription;
         public final String mLink;
         public final String mCategory;
-        public final String mPubDate;
         public final String mThumbnail;
         public final String mVideoLink;
+        public final Long mPubDate;
 
         public FeedItem(String title, String description, String link, String category,
-                        String pubDate, String videoLink, String thumbnail)
+                        Long pubDate, String videoLink, String thumbnail)
         {
             mTitle = title;
             mDescription = description;
