@@ -84,6 +84,8 @@ public class FeedParser {
                     break;
                 case RSS_DESCRIPTION:
                     description = readText(parser);
+                    final int ltIndex = description.indexOf('<');
+                    if (-1 != ltIndex) { description = description.substring(0, ltIndex); }
                     break;
                 case RSS_LINK:
                     link = readText(parser);
