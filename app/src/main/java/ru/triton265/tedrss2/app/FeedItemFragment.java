@@ -18,8 +18,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -91,7 +93,12 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
                         ((TextView) view).setText(time);
                         return true;
                     case COLUMN_THUMBNAIL_LINK:
-                        // TODO: use glide here Luke.
+                        Glide.with(FeedItemFragment.this)
+                                .load(cursor.getString(columnIndex))
+                                //.fitCenter()
+                                .centerCrop()
+                                .placeholder(android.R.drawable.stat_sys_download)
+                                .into((ImageView)view);
                         return true;
                     default:
                         return false;
