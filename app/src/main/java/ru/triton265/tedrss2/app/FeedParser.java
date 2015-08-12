@@ -1,5 +1,7 @@
 package ru.triton265.tedrss2.app;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
@@ -7,6 +9,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -155,7 +158,7 @@ public class FeedParser {
         return false;
     }
 
-    public static class FeedItem {
+    public static class FeedItem implements Parcelable {
         public final String mTitle;
         public final String mDescription;
         public final String mLink;
@@ -174,6 +177,80 @@ public class FeedParser {
             mPubDate = pubDate;
             mThumbnail = thumbnail;
             mVideoLink = videoLink;
+        }
+
+        // TODO: test.
+        private FeedItem(Parcel in) {
+            mTitle = in.readString();
+            mDescription = in.readString();
+            mLink = in.readString();
+            mCategory = in.readString();
+            mThumbnail = in.readString();
+            mVideoLink = in.readString();
+            mPubDate = in.readLong();
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(mTitle);
+            dest.writeString(mDescription);
+            dest.writeString(mLink);
+            dest.writeString(mCategory);
+            dest.writeString(mThumbnail);
+            dest.writeString(mVideoLink);
+            dest.writeLong(mPubDate);
+        }
+
+        public static final Parcelable.Creator<FeedItem> CREATOR = new Parcelable.Creator<FeedItem>() {
+            @Override
+            public FeedItem createFromParcel(Parcel source) {
+                return new FeedItem(source);
+            }
+
+            @Override
+            public FeedItem[] newArray(int size) {
+                return new FeedItem[size];
+            }
+        };
+
+        @Override
+        public int hashCode() {
+            int result = 35;
+
+            result += mTitle.hashCode();
+            result += mDescription.hashCode();
+            result += mLink.hashCode();
+            result += mCategory.hashCode();
+            result += mThumbnail.hashCode();
+            result += mVideoLink.hashCode();
+            result += mPubDate.hashCode();
+
+            return result * 37;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof FeedItem)) {
+                return false;
+            }
+            if (o == this) {
+                return true;
+            }
+
+            final FeedItem item = (FeedItem)o;
+            return  objectsCompare(mTitle, item.mTitle) && objectsCompare(mDescription, item.mDescription) &&
+                    objectsCompare(mLink, item.mLink) && objectsCompare(mCategory, item.mCategory) &&
+                    objectsCompare(mThumbnail, item.mThumbnail) && objectsCompare(mVideoLink, item.mVideoLink) &&
+                    objectsCompare(mPubDate, item.mPubDate);
+        }
+
+        private boolean objectsCompare(Object a, Object b) {
+            return (a == null) ? (b == null) : a.equals(b);
         }
     }
 }

@@ -1,5 +1,6 @@
 package ru.triton265.tedrss2.app;
 
+import android.os.Parcel;
 import android.test.InstrumentationTestCase;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -63,5 +64,18 @@ public class FeedParserTest extends InstrumentationTestCase {
         for (FeedParser.FeedItem item: entries) { assertNotNull(item.mLink); }
 
         stream.close();
+    }
+
+    // http://stackoverflow.com/questions/12829700/android-unit-testing-bundle-parcelable
+    public void testFeedItem() {
+        final FeedParser.FeedItem item = new FeedParser.FeedItem("title", "description", "link",
+                "category", 1000L, "video", "thumb");
+
+        final Parcel parcel = Parcel.obtain();
+        item.writeToParcel(parcel, 0);
+        parcel.setDataPosition(0);
+
+        final FeedParser.FeedItem itemFromParcel = FeedParser.FeedItem.CREATOR.createFromParcel(parcel);
+        assertEquals(item, itemFromParcel);
     }
 }
