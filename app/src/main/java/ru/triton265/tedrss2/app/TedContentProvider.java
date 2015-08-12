@@ -74,7 +74,7 @@ public class TedContentProvider extends ContentProvider {
         final SQLiteDatabase db = mDbHelper.getWritableDatabase();
         final long id = db.insert(FeedReaderContract.FeedItem.TABLE_NAME, null, values);
         if (id > 0) {
-            Uri itemUri = ContentUris.withAppendedId(uri, id);
+            final Uri itemUri = ContentUris.withAppendedId(uri, id);
             getContext().getContentResolver().notifyChange(itemUri, null);
             return itemUri;
         }
