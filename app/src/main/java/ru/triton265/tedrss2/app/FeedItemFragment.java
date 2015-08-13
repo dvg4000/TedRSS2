@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -36,13 +37,17 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
             TedContentContract.FeedItem._ID,
             TedContentContract.FeedItem.TITLE,
             TedContentContract.FeedItem.PUB_DATE,
-            TedContentContract.FeedItem.THUMBNAIL_LINK
+            TedContentContract.FeedItem.THUMBNAIL_LINK,
+            TedContentContract.FeedItem.VIDEO_LINK,
+            TedContentContract.FeedItem.DESCRIPTION
     };
 
     private static final int COLUMN_ID = 0;
     private static final int COLUMN_TITLE = 1;
     private static final int COLUMN_PUB_DATE = 2;
     private static final int COLUMN_THUMBNAIL_LINK = 3;
+    private static final int COLUMN_VIDEO_LINK = 4;
+    private static final int COLUMN_DESCRIPTION = 5;
 
     private static final String[] FROM_COLUMNS = new String[]{
             TedContentContract.FeedItem.TITLE,
@@ -59,6 +64,7 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
     private SimpleCursorAdapter mAdapter;
     private Menu mOptionsMenu;
     private Object mSyncObserverHandle;
+    private IObserver mObserver;
 
 
     public static FeedItemFragment newInstance() {
@@ -70,6 +76,18 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         createSyncAccount();
+
+        try {
+            mObserver = (IObserver) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement IObserver");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mObserver = null;
     }
 
     @Override
@@ -162,6 +180,19 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        if (null == mObserver) { return; }
+
+        final Cursor cursor = (Cursor)mAdapter.getItem(position);
+        final FeedParser.FeedItem item = new FeedParser.FeedItem(
+                null, cursor.getString(COLUMN_DESCRIPTION), null, null, null,
+                cursor.getString(COLUMN_VIDEO_LINK),null);
+        mObserver.onItemClick(item);
+    }
+
     public void setRefreshActionButtonState(boolean refreshing) {
         if (mOptionsMenu == null) {
             return;
@@ -232,40 +263,7 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
         }
     };
 
-    /*
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    interface IObserver {
+        void onItemClick(FeedParser.FeedItem item);
     }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-        }
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
-    }
-    */
-
 }

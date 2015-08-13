@@ -78,4 +78,22 @@ public class FeedParserTest extends InstrumentationTestCase {
         final FeedParser.FeedItem itemFromParcel = FeedParser.FeedItem.CREATOR.createFromParcel(parcel);
         assertEquals(item, itemFromParcel);
     }
+
+    public void testFeedItemNull() {
+        final String video = "video";
+        final String description = "description";
+
+        final FeedParser.FeedItem item = new FeedParser.FeedItem(null, description, null,
+                null, null, video, null);
+
+        final Parcel parcel = Parcel.obtain();
+        item.writeToParcel(parcel, 0);
+        parcel.setDataPosition(0);
+
+        final FeedParser.FeedItem itemFromParcel = FeedParser.FeedItem.CREATOR.createFromParcel(parcel);
+        assertEquals(item, itemFromParcel);
+
+        assertEquals(video, itemFromParcel.mVideoLink);
+        assertEquals(description, itemFromParcel.mDescription);
+    }
 }

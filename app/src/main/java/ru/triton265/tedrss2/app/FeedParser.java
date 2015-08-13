@@ -187,7 +187,7 @@ public class FeedParser {
             mCategory = in.readString();
             mThumbnail = in.readString();
             mVideoLink = in.readString();
-            mPubDate = in.readLong();
+            mPubDate = (Long)in.readValue(Long.class.getClassLoader());
         }
 
         @Override
@@ -203,7 +203,7 @@ public class FeedParser {
             dest.writeString(mCategory);
             dest.writeString(mThumbnail);
             dest.writeString(mVideoLink);
-            dest.writeLong(mPubDate);
+            dest.writeValue(mPubDate);
         }
 
         public static final Parcelable.Creator<FeedItem> CREATOR = new Parcelable.Creator<FeedItem>() {
@@ -222,13 +222,13 @@ public class FeedParser {
         public int hashCode() {
             int result = 35;
 
-            result += mTitle.hashCode();
-            result += mDescription.hashCode();
-            result += mLink.hashCode();
-            result += mCategory.hashCode();
-            result += mThumbnail.hashCode();
-            result += mVideoLink.hashCode();
-            result += mPubDate.hashCode();
+            result += null != mTitle ? mTitle.hashCode() : 0;
+            result += null != mDescription ? mDescription.hashCode() : 0;
+            result += null != mLink ? mLink.hashCode() : 0;
+            result += null != mCategory ? mCategory.hashCode() : 0;
+            result += null != mThumbnail ? mThumbnail.hashCode() : 0;
+            result += null != mVideoLink ? mVideoLink.hashCode() : 0;
+            result += null != mPubDate ? mPubDate.hashCode() : 0;
 
             return result * 37;
         }

@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FeedItemFragment.IObserver {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,5 +18,13 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.container, FeedItemFragment.newInstance())
                     .commit();
         }
+    }
+
+    @Override
+    public void onItemClick(FeedParser.FeedItem item) {
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack("main")
+                .replace(R.id.container, VideoFragment.newInstance(item))
+                .commit();
     }
 }
