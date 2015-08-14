@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.IBinder;
 
 public class AuthenticatorService extends Service {
-    public static final String ACCOUNT_TYPE = "tedrss2.triton265.ru";
-    public static final String ACCOUNT_NAME = "guest";
+    private static final String ACCOUNT_TYPE = "tedrss2.triton265.ru";
+    private static final String ACCOUNT_NAME = "guest";
 
     private StubAuthenticator mAuthenticator;
 

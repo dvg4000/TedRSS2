@@ -13,7 +13,6 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,8 +41,8 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
             TedContentContract.FeedItem.DESCRIPTION
     };
 
-    private static final int COLUMN_ID = 0;
-    private static final int COLUMN_TITLE = 1;
+    // --Commented out by Inspection (8/14/15 10:13 AM):private static final int COLUMN_ID = 0;
+    // --Commented out by Inspection (8/14/15 10:13 AM):private static final int COLUMN_TITLE = 1;
     private static final int COLUMN_PUB_DATE = 2;
     private static final int COLUMN_THUMBNAIL_LINK = 3;
     private static final int COLUMN_VIDEO_LINK = 4;
@@ -68,8 +67,7 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
 
 
     public static FeedItemFragment newInstance() {
-        FeedItemFragment fragment = new FeedItemFragment();
-        return fragment;
+        return new FeedItemFragment();
     }
 
     @Override
@@ -193,7 +191,7 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
         mObserver.onItemClick(item);
     }
 
-    public void setRefreshActionButtonState(boolean refreshing) {
+    private void setRefreshActionButtonState(boolean refreshing) {
         if (mOptionsMenu == null) {
             return;
         }
@@ -244,7 +242,7 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
                 bundle);
     }
 
-    private SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
+    private final SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
         @Override
         public void onStatusChanged(int which) {
             getActivity().runOnUiThread(new Runnable() {

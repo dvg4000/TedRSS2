@@ -46,14 +46,14 @@ public class TedContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        int delCount = 0;
+        int delCount;
 
         switch (URI_MATCHER.match(uri)) {
             case ITEM_LIST:
                 delCount = db.delete(FeedReaderContract.FeedItem.TABLE_NAME, selection, selectionArgs);
                 break;
             case ITEM_ID:
-                String where = FeedReaderContract.FeedItem._ID + " = " + uri.getLastPathSegment();;
+                String where = FeedReaderContract.FeedItem._ID + " = " + uri.getLastPathSegment();
                 if (!TextUtils.isEmpty(selection)) { where += " AND " + selection; }
                 delCount = db.delete(FeedReaderContract.FeedItem.TABLE_NAME, where, selectionArgs);
                 break;
@@ -107,7 +107,7 @@ public class TedContentProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        int updateCount = 0;
+        int updateCount;
 
         switch (URI_MATCHER.match(uri)) {
             case ITEM_LIST:

@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
 
 public class TedContentContract {
     public static final String AUTHORITY = "ru.triton265.tedrss2.provider";
-    static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    private static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     public static final class FeedItem implements BaseColumns{
         static final String ITEMS = "items";

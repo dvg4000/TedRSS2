@@ -9,7 +9,6 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,14 +41,14 @@ public class FeedParser {
             final XmlPullParser parser = Xml.newPullParser();
             //parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
-            return findItem(parser, RSS_CHANNEL) ? readFeed(parser) : Collections.EMPTY_LIST;
+            return findItem(parser, RSS_CHANNEL) ? readFeed(parser) : Collections.<FeedItem>emptyList();
         } finally {
             in.close();
         }
     }
 
     private List<FeedItem> readFeed(XmlPullParser parser) throws IOException, XmlPullParserException, ParseException {
-        final List<FeedItem> entries = new ArrayList<FeedItem>();
+        final List<FeedItem> entries = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, XML_NAMESPACE, RSS_CHANNEL);
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -115,9 +114,8 @@ public class FeedParser {
     private String readAttribute(XmlPullParser parser, String name, String ns, String attr)
             throws IOException, XmlPullParserException
     {
-        String url = null;
         parser.require(XmlPullParser.START_TAG, ns, name);
-        url = parser.getAttributeValue(null, attr);
+        final String url = parser.getAttributeValue(null, attr);
         parser.nextTag();
         parser.require(XmlPullParser.END_TAG, ns, name);
         return url;

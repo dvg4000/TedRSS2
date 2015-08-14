@@ -2,8 +2,6 @@ package ru.triton265.tedrss2.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 
 
 public class MainActivity extends AppCompatActivity implements FeedItemFragment.IObserver {

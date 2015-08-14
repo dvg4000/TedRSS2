@@ -1,6 +1,5 @@
 package ru.triton265.tedrss2.app;
 
-import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
