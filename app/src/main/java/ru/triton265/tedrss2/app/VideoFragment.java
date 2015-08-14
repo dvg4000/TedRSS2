@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.VideoView;
 
 
-// TODO: add layout_land
 public class VideoFragment extends Fragment {
     private static final String ARG_FEED_ITEM = "feed_item";
     private static final String BUNDLE_CURRENT_POSITION = "current_position";
