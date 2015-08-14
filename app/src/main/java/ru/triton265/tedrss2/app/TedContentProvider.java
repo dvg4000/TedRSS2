@@ -88,6 +88,7 @@ public class TedContentProvider extends ContentProvider {
 
         switch (URI_MATCHER.match(uri)) {
             case ITEM_LIST:
+                if (TextUtils.isEmpty(sortOrder)) { sortOrder = TedContentContract.FeedItem.SORT_ORDER_DEFAULT; }
                 builder.setTables(FeedReaderContract.FeedItem.TABLE_NAME);
                 break;
             case ITEM_ID:

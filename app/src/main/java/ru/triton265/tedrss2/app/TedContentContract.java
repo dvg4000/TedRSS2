@@ -59,5 +59,7 @@ public class TedContentContract {
          * <p>TYPE: TEXT</p>
          */
         public static final String VIDEO_LINK = FeedReaderContract.FeedItem.COLUMN_NAME_VIDEO_LINK;
+
+        public static final String SORT_ORDER_DEFAULT = PUB_DATE + " DESC";
     }
 }
