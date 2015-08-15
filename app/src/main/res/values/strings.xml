@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ted talks RSS</string>
+    <string name="app_name">TED talks</string>
     <string name="action_refresh">Refresh</string>
     <string name="thumbnail">thumbnail</string>
     <string name="loading">loading</string>
