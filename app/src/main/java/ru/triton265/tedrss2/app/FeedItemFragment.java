@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 
 public class FeedItemFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String PREF_SETUP_COMPLETE = "setup_complete";
-    private static final long SYNC_FREQUENCY = TimeUnit.HOURS.convert(6, TimeUnit.HOURS);
+    private static final long SYNC_FREQUENCY = TimeUnit.SECONDS.convert(6, TimeUnit.HOURS);
 
     private static final String[] PROJECTION = new String[]{
             TedContentContract.FeedItem._ID,
@@ -209,21 +209,13 @@ public class FeedItemFragment extends ListFragment implements LoaderManager.Load
 
         final Account account = AuthenticatorService.getAccount();
         AccountManager accountManager = (AccountManager) getActivity().getSystemService(Context.ACCOUNT_SERVICE);
-        // Create account, if it's missing. (Either first run, or user has deleted account.)
         if (accountManager.addAccountExplicitly(account, null, null)) {
-            // Inform the system that this account supports sync
             ContentResolver.setIsSyncable(account, TedContentContract.AUTHORITY, 1);
-            // Inform the system that this account is eligible for auto sync when the network is up
             ContentResolver.setSyncAutomatically(account, TedContentContract.AUTHORITY, true);
-            // Recommend a schedule for automatic synchronization. The system may modify this based
-            // on other scheduled syncs and network utilization.
             ContentResolver.addPeriodicSync(account, TedContentContract.AUTHORITY, new Bundle(), SYNC_FREQUENCY);
             newAccount = true;
         }
 
-        // Schedule an initial sync if we detect problems with either our account or our local
-        // data has been deleted. (Note that it's possible to clear app data WITHOUT affecting
-        // the account list, so wee need to check both.)
         if (newAccount || !setupComplete) {
             triggerRefresh();
             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
